@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "id": "example-tools",
+  "name": "Example tools",
+  "description": "Demonstrates a cooperative third-party module and conditional rule",
+  "default_enabled": false,
+  "modules": [{
+    "descriptor": {"id": "configuration", "name": "Delayed configuration", "description": "Select configuration 2 after one second"},
+    "implementation": {
+      "type": "sequence",
+      "steps": [
+        {"type": "delay", "duration_ms": 1000},
+        {"type": "command", "command": {"command": "select_configuration", "configuration": 2}, "timeout_ms": 5000}
+      ]
+    }
+  }],
+  "behaviors": [{
+    "descriptor": {"id": "pet", "name": "PET on map 1", "description": "Optional rule with a dispatch cooldown"},
+    "priority": 100,
+    "condition": {"type": "map", "map_id": 1},
+    "cooldown_ms": 10000,
+    "commands": [{"command": "set_pet", "enabled": true}]
+  }]
+}
