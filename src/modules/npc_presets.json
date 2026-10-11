@@ -1,0 +1,1091 @@
+{
+  "mmo": [
+    {
+      "name": "-=[ Streuner ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        1,
+        2,
+        20
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Recruit Streuner ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        1,
+        2
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Aider Streuner  ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        1,
+        2
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Streuner }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        2,
+        20
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Lordakia ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        2,
+        3,
+        4,
+        17
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Lordakia }::..",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        2
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Saimon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        3,
+        4
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Mordon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        3
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Devolarium ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        3
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Saimon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        3,
+        4
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Mordon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        3
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Devolarium }::..",
+      "radius": 575,
+      "priority": 0,
+      "map_ids": [
+        3
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Sibelon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        4
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Sibelon }::..",
+      "radius": 570,
+      "priority": 0,
+      "map_ids": [
+        4
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Lordakium ]=-",
+      "radius": 610,
+      "priority": 0,
+      "map_ids": [
+        17
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Sibelonit ]=-",
+      "radius": 575,
+      "priority": 0,
+      "map_ids": [
+        17
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Lordakium }::..",
+      "radius": 625,
+      "priority": 0,
+      "map_ids": [
+        17
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Sibelonit }::..",
+      "radius": 575,
+      "priority": 0,
+      "map_ids": [
+        17
+      ],
+      "flags": []
+    },
+    {
+      "name": "* Lordakium Spore *",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        17
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Cubikon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        18
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Protegit ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        18
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Plagued Kristallin ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        18
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Kristallin ]=-",
+      "radius": 575,
+      "priority": 0,
+      "map_ids": [
+        18,
+        19
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Kristallon ]=-",
+      "radius": 600,
+      "priority": 0,
+      "map_ids": [
+        18,
+        19
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Kristallin }::..",
+      "radius": 575,
+      "priority": 0,
+      "map_ids": [
+        18,
+        19
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Kristallon }::..",
+      "radius": 615,
+      "priority": 0,
+      "map_ids": [
+        19
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Blighted Kristallon ]=-",
+      "radius": 615,
+      "priority": 0,
+      "map_ids": [
+        19
+      ],
+      "flags": []
+    },
+    {
+      "name": "<=< Blighted Gygerthrall >=>",
+      "radius": 570,
+      "priority": 0,
+      "map_ids": [
+        19
+      ],
+      "flags": []
+    },
+    {
+      "name": "\\\\ Purpose XXI //",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        20
+      ],
+      "flags": []
+    }
+  ],
+  "eic": [
+    {
+      "name": "-=[ Streuner ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        5,
+        6,
+        24
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Recruit Streuner ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        5,
+        6
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Aider Streuner  ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        5,
+        6
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Streuner }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        6,
+        24
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Lordakia ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        6,
+        7,
+        8,
+        21
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Lordakia }::..",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        6
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Saimon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        7,
+        8
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Mordon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        7
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Devolarium ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        7
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Saimon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        7,
+        8
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Mordon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        7
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Devolarium }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        7
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Sibelon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        8
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Sibelon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        8
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Lordakium ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        21
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Sibelonit ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        21
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Lordakium }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        21
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Sibelonit }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        21
+      ],
+      "flags": []
+    },
+    {
+      "name": "* Lordakium Spore *",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        21
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Cubikon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        22
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Protegit ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        22
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Plagued Kristallin ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        22
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Kristallin ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        22,
+        23
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Kristallon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        22,
+        23
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Kristallin }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        22,
+        23
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Kristallon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        23
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Blighted Kristallon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        23
+      ],
+      "flags": []
+    },
+    {
+      "name": "<=< Blighted Gygerthrall >=>",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        23
+      ],
+      "flags": []
+    },
+    {
+      "name": "\\\\ Purpose XXI //",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        24
+      ],
+      "flags": []
+    }
+  ],
+  "vru": [
+    {
+      "name": "-=[ Streuner ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        9,
+        10,
+        28
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Recruit Streuner ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        9,
+        10
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Aider Streuner  ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        9,
+        10
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Streuner }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        10,
+        28
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Lordakia ]=-",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        10,
+        11,
+        12,
+        25
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Lordakia }::..",
+      "radius": 500,
+      "priority": 0,
+      "map_ids": [
+        10
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Saimon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        11,
+        12
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Mordon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        11
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Devolarium ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        11
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Saimon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        11,
+        12
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Mordon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        11
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Devolarium }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        11
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Sibelon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        12
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Sibelon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        12
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Lordakium ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        25
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Sibelonit ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        25
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Lordakium }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        25
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Sibelonit }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        25
+      ],
+      "flags": []
+    },
+    {
+      "name": "* Lordakium Spore *",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        25
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Cubikon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        26
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Protegit ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        26
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Plagued Kristallin ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        26
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Kristallin ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        26,
+        27
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Kristallon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        26,
+        27
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Kristallin }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        26,
+        27
+      ],
+      "flags": []
+    },
+    {
+      "name": "..::{ Boss Kristallon }::..",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        27
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Blighted Kristallon ]=-",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        27
+      ],
+      "flags": []
+    },
+    {
+      "name": "<=< Blighted Gygerthrall >=>",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        27
+      ],
+      "flags": []
+    },
+    {
+      "name": "\\\\ Purpose XXI //",
+      "radius": 550,
+      "priority": 0,
+      "map_ids": [
+        28
+      ],
+      "flags": []
+    }
+  ],
+  "special": [
+    {
+      "name": "\\\\ Urge IV //",
+      "radius": 550,
+      "priority": -100,
+      "map_ids": [
+        0,
+        18,
+        22,
+        26
+      ],
+      "flags": [
+        "ignore_attacked",
+        "ignore_ownership"
+      ]
+    },
+    {
+      "name": "\\\\ Regard CXI //",
+      "radius": 550,
+      "priority": -100,
+      "map_ids": [
+        0,
+        18,
+        22,
+        26
+      ],
+      "flags": [
+        "ignore_attacked",
+        "ignore_ownership"
+      ]
+    },
+    {
+      "name": "\\\\ Capital I //",
+      "radius": 550,
+      "priority": -100,
+      "map_ids": [
+        0,
+        20,
+        24,
+        28
+      ],
+      "flags": [
+        "ignore_attacked",
+        "ignore_ownership"
+      ]
+    },
+    {
+      "name": "\\\\ Observe X //",
+      "radius": 550,
+      "priority": -100,
+      "map_ids": [
+        0,
+        19,
+        23,
+        27
+      ],
+      "flags": [
+        "ignore_attacked",
+        "ignore_ownership"
+      ]
+    },
+    {
+      "name": "\\\\ Attitude XIII //",
+      "radius": 550,
+      "priority": -100,
+      "map_ids": [
+        0,
+        19,
+        23,
+        27
+      ],
+      "flags": [
+        "ignore_attacked",
+        "ignore_ownership"
+      ]
+    }
+  ],
+  "uber": [
+    {
+      "name": "( Uber Kristallon )",
+      "radius": 630,
+      "priority": 0,
+      "map_ids": [
+        29
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Kristallin )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Streuner )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Sibelonit )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Mordon )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Sibelon )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Devolarium )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29
+      ],
+      "flags": []
+    }
+  ],
+  "pirates": [
+    {
+      "name": "-=[ Saboteur ]=-",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        91,
+        92,
+        93
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Interceptor ]=-",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        91,
+        92,
+        93
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Annihilator ]=-",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        91,
+        92,
+        93
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Barracuda ]=-",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        91,
+        92,
+        93
+      ],
+      "flags": []
+    },
+    {
+      "name": "-=[ Battleray ]=-",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        93
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Saboteur )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29,
+        92
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Interceptor )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29,
+        92
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Annihilator )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29,
+        92
+      ],
+      "flags": []
+    },
+    {
+      "name": "( Uber Barracuda )",
+      "radius": 580,
+      "priority": 0,
+      "map_ids": [
+        29,
+        92
+      ],
+      "flags": []
+    }
+  ],
+  "blacklight": [
+    {
+      "name": "\\\\ Impulse II //",
+      "radius": 590,
+      "priority": 0,
+      "map_ids": [
+        306,
+        307,
+        308
+      ],
+      "flags": []
+    },
+    {
+      "name": "\\\\ Attend IX //",
+      "radius": 650,
+      "priority": 0,
+      "map_ids": [
+        306,
+        307,
+        308
+      ],
+      "flags": []
+    }
+  ]
+}

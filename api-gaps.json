@@ -1,0 +1,520 @@
+{
+  "schema_version": 1,
+  "audit": {
+    "shared_plugin": {
+      "repository": "https://github.com/Darkbot-Plugins/SharedPlugin",
+      "commit": "fe5e3b3a9d369b3673037410d9e4765681fdf161",
+      "version": "0.12.22"
+    },
+    "default_plugin": {
+      "repository": "https://github.com/darkbot-reloaded/DefaultPlugin",
+      "commit": "1d8e3a9fe28e77b5066354da8af503d6df1171f4"
+    },
+    "dm_plugin": {
+      "repository": "https://github.com/darkbot-reloaded/DmPlugin",
+      "commit": "d3ebcc7828c3b9eb3755dc4b6f8d47c4dc2cca36"
+    }
+  },
+  "coverage_legend": {
+    "native_api": "The API has a direct normalized observation or typed command; backend live support may still vary.",
+    "captured_optional": "Possible through extensible entity/hero fields or custom adapters, not guaranteed by the shared contract/backend.",
+    "unavailable": "Requires a new typed API, host service, event/UI/config integration, or client capability."
+  },
+  "feature_families": [
+    {
+      "id": "base.combat",
+      "plugins": [
+        "base",
+        "combat"
+      ],
+      "features": [
+        "SimpleHealing",
+        "RepairPet",
+        "FixPetStuck",
+        "CrowdAvoidance",
+        "SolarisInc",
+        "DefaultPlugin/DmPlugin general rules"
+      ],
+      "coverage": "partial",
+      "api": "native_api + captured_optional",
+      "gaps": [
+        "pet health/shield/fuel/activity/position/gears are typed observations (pet feature state) on all backends; pet repair targeting, a server-side stuck timer and ship-specific readiness remain optional",
+        "combat fields, inventory, SelectConfiguration and generic UseItem exist; exact attack/event API, NPC flags/config providers and ship-specific cooldown semantics are not universal"
+      ]
+    },
+    {
+      "id": "base.economy",
+      "plugins": [
+        "base",
+        "economy"
+      ],
+      "features": [
+        "OreSeller",
+        "AutoRefin",
+        "Autobuy"
+      ],
+      "coverage": "partial",
+      "api": "native_api + unavailable",
+      "gaps": [
+        "ore inventory, balances, cargo and trade-area availability are typed observations (economy state); RefineOre/SellOre are typed commands on all backends, validated against observed inventory and trade-window state",
+        "shop/autobuy/backpage purchases still need authenticated host services with completion results; transaction acknowledgements are submission-based, not a typed server result"
+      ]
+    },
+    {
+      "id": "base.utility",
+      "plugins": [
+        "base",
+        "utility"
+      ],
+      "features": [
+        "CloseAdOffer",
+        "GGAlertCloser",
+        "FastTravel",
+        "LogOverlay",
+        "captcha support utilities"
+      ],
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "gaps": [
+        "GUI window/element enumeration, ClickGui/CloseGui and SetOverlay/RemoveOverlay are typed APIs on the Ruffle and Flash backends (packet backend has no UI and fails closed); poll_events is a bounded log/journal stream on all three backends",
+        "identifying the specific ad-offer and gate-alert windows is module policy, not new API; captcha support and fast-travel's module-mode/config integration are not exposed"
+      ]
+    },
+    {
+      "id": "base.event",
+      "plugins": [
+        "base",
+        "event"
+      ],
+      "features": [
+        "Spaceball",
+        "SimpleGalaxyGate"
+      ],
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "gaps": [
+        "gate spin/place/life purchase typed commands exist on all backends; gate builder progression is a typed observation (gate.builder); SelectGateDifficulty drives the real selection UI on Ruffle and Flash",
+        "event schedules/server time and Spaceball team/direction remain captured_optional (spaceball scoreboard widgets, station/event proxies when observable); gate-specific waves/mechanics, browser API state and durable progression are backend-specific or absent"
+      ]
+    },
+    {
+      "id": "base.visual",
+      "plugins": [
+        "base",
+        "utility"
+      ],
+      "features": [
+        "LogOverlay"
+      ],
+      "coverage": "partial",
+      "api": "native_api + unavailable",
+      "gaps": [
+        "SetOverlay/RemoveOverlay draw host-owned text on the game stage on Ruffle and Flash, and the log event stream is poll_events on all backends; upstream localization parity and the packet backend (no display) remain unavailable"
+      ]
+    },
+    {
+      "id": "general.default_dm",
+      "plugins": [
+        "base",
+        "combat",
+        "utility",
+        "event",
+        "economy"
+      ],
+      "features": [
+        "anti-push",
+        "stop-button",
+        "captcha-picker",
+        "anti-train",
+        "ambulance",
+        "defense",
+        "urgent-detector",
+        "profile-changer",
+        "fix-travel",
+        "booty-keys",
+        "auto-cloak",
+        "best-ammo/rocket/launcher/formation/ability",
+        "custom-events",
+        "others",
+        "calendar-bonus"
+      ],
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "gaps": [
+        "existing GENERAL_BEHAVIORS.md coverage is a constrained port; exact DarkBot providers/config conditions/events and several client/backpage/GUI/profile/group/urgent quest/calendar/economy services are not generally available",
+        "rules must fail closed when optional fields/services are missing"
+      ]
+    }
+  ],
+  "shared_plugin_features": [
+    {
+      "feature": "SimpleHealing",
+      "plugin_group": "combat",
+      "module_owner": "base.combat",
+      "coverage": "partial",
+      "api": "native_api + captured_optional",
+      "needs": [
+        "health/shield and attack state",
+        "ship ability inventory/cooldown/compatibility",
+        "target/group observations"
+      ],
+      "notes": "UseItem and common health/effects are available; ship capability and exact readiness are optional/backend dependent."
+    },
+    {
+      "feature": "RepairPet",
+      "plugin_group": "combat",
+      "module_owner": "base.combat",
+      "coverage": "partial",
+      "api": "native_api + captured_optional",
+      "needs": [
+        "pet health/repair eligibility",
+        "pet activity and ownership",
+        "repair gear availability"
+      ],
+      "notes": "SetPet/SelectPetGear exist; pet feature state exposes owned/active/destroyed/health/shield/fuel/gears/idle on all backends. The specialized pet repair workflow and authoritative completion are missing."
+    },
+    {
+      "feature": "FixPetStuck",
+      "plugin_group": "utility",
+      "module_owner": "base.utility",
+      "coverage": "partial",
+      "api": "native_api + captured_optional",
+      "needs": [
+        "pet position/activity",
+        "stuck timer",
+        "pet gear state"
+      ],
+      "notes": "Pet commands exist; pet position, activity/idle and gear state are typed observations where the backend exposes them. A server-side stuck timer still has to be derived client-side."
+    },
+    {
+      "feature": "CrowdAvoidance",
+      "plugin_group": "combat",
+      "module_owner": "base.combat",
+      "coverage": "partial",
+      "api": "native_api + captured_optional",
+      "needs": [
+        "nearby player/NPC identities, faction, attack state, geometry",
+        "configurable flee rules"
+      ],
+      "notes": "Entities, positions and safe places exist; exact enemy/push flags and upstream safety config semantics are optional."
+    },
+    {
+      "feature": "SolarisInc",
+      "plugin_group": "combat",
+      "module_owner": "base.combat",
+      "coverage": "partial",
+      "api": "native_api + captured_optional",
+      "needs": [
+        "ship identity/ability availability",
+        "target and ability cooldown state"
+      ],
+      "notes": "Generic item use exists; specific ship capability/cooldown interpretation can be captured but is not a stable typed contract."
+    },
+    {
+      "feature": "OreSeller",
+      "plugin_group": "economy",
+      "module_owner": "base.economy",
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "needs": [
+        "ore counts/cargo",
+        "trade/base eligibility",
+        "sell transaction API",
+        "pet/drone/ship config changes",
+        "trade completion"
+      ],
+      "notes": "economy.ores/cargo/trade_available are typed observations and SellOre a typed command on all backends (validated against observed inventory and trade area). Trade completion is submission-only and per-material sell prices are not observed."
+    },
+    {
+      "feature": "AutoRefin",
+      "plugin_group": "economy",
+      "module_owner": "base.economy",
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "needs": [
+        "ore inventory by material",
+        "cargo ratio",
+        "refinery recipe calculation",
+        "direct refine capability or GUI transaction",
+        "transaction result"
+      ],
+      "notes": "RefineOre is a typed command validated against the observed recipe capacity on all backends. A dedicated transaction-result acknowledgement is still missing."
+    },
+    {
+      "feature": "Autobuy",
+      "plugin_group": "economy",
+      "module_owner": "base.economy",
+      "coverage": "unavailable",
+      "api": "unavailable",
+      "needs": [
+        "item/price catalog",
+        "currency balance",
+        "authenticated shop purchase service",
+        "purchase completion/error"
+      ],
+      "notes": "Generic service registry can host this, but no built-in service/API exists."
+    },
+    {
+      "feature": "Spaceball",
+      "plugin_group": "event",
+      "module_owner": "shared_spaceball",
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "needs": [
+        "event/team/direction state",
+        "ball entity semantics",
+        "event time window",
+        "pet mode and loot policy",
+        "profile/refresh lifecycle"
+      ],
+      "notes": "Manual attack/follow, named cargo collection and directed travel are implemented. Spaceball team/score widgets are captured_optional observations on the graphical backends; automatic direction policy, event schedule, profile and refresh lifecycle remain unavailable."
+    },
+    {
+      "feature": "SimpleGalaxyGate",
+      "plugin_group": "gg",
+      "module_owner": "galaxy",
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "needs": [
+        "gate status/catalog/progression",
+        "NPC waves/IDs and gate-specific combat policy",
+        "event schedule",
+        "reliable UI difficulty selection",
+        "safe retry/purchase decisions"
+      ],
+      "notes": "Existing galaxy family implements typed builder/travel/combat lifecycle; gate.builder progression and SelectGateDifficulty (observed selection UI) are typed APIs on Ruffle/Flash (packet: builder commands only). Broader SharedPlugin gate-specific scripts and event scheduling remain gaps."
+    },
+    {
+      "feature": "FastTravel",
+      "plugin_group": "utility",
+      "module_owner": "base.utility",
+      "coverage": "partial",
+      "api": "native_api + captured_optional",
+      "needs": [
+        "module travel mode/temporal-module detection",
+        "travel threshold and attempt state"
+      ],
+      "notes": "Directed portal graph, map traveler and JumpPortal exist; upstream bot module/config context differs."
+    },
+    {
+      "feature": "GGAlertCloser",
+      "plugin_group": "utility",
+      "module_owner": "base.utility",
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "needs": [
+        "game GUI inventory/coordinates",
+        "gate alert visibility and click action"
+      ],
+      "notes": "gui.observe plus ClickGui/CloseGui are typed APIs on Ruffle and Flash; identifying the specific alert window is module policy. The packet backend has no GUI."
+    },
+    {
+      "feature": "CloseAdOffer",
+      "plugin_group": "utility",
+      "module_owner": "base.utility",
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "needs": [
+        "offer GUI state",
+        "GUI close/click action"
+      ],
+      "notes": "Enumerated GUI elements expose the offer window when visible; CloseGui/ClickGui act on it on Ruffle and Flash. The packet backend has no GUI."
+    },
+    {
+      "feature": "LogOverlay",
+      "plugin_group": "utility",
+      "module_owner": "base.utility",
+      "coverage": "partial",
+      "api": "native_api + unavailable",
+      "needs": [
+        "game log event stream",
+        "drawable overlay and localization"
+      ],
+      "notes": "poll_events is a bounded replay journal on all backends and SetOverlay/RemoveOverlay paint host-owned text on Ruffle and Flash. Upstream localization parity is not implemented."
+    },
+    {
+      "feature": "TemporalModuleDetector",
+      "plugin_group": "utility",
+      "module_owner": "base.utility",
+      "coverage": "unavailable",
+      "api": "unavailable",
+      "needs": [
+        "upstream module runtime type introspection"
+      ],
+      "notes": "Rust module identity can supply a local equivalent; upstream runtime class test is not directly portable."
+    },
+    {
+      "feature": "CustomSafetyFinder",
+      "plugin_group": "combat",
+      "module_owner": "base.combat",
+      "coverage": "partial",
+      "api": "native_api + captured_optional",
+      "needs": [
+        "safety policy/config, CBS ownership/hull/ally state, run-mode thresholds"
+      ],
+      "notes": "Obstacle geometry, safe places and movement are strong native coverage; policy details and CBS metadata may be optional."
+    },
+    {
+      "feature": "SharedPlugin general rules",
+      "plugin_group": "base",
+      "module_owner": "base.behaviors",
+      "coverage": "partial",
+      "api": "native_api + captured_optional + unavailable",
+      "needs": [
+        "see GENERAL_BEHAVIORS.md"
+      ],
+      "notes": "Includes DM/Default behavior ports; exact upstream parity depends on observations and host services, especially profile/backpage/game-log actions."
+    }
+  ],
+  "api_inventory": {
+    "typed_commands": [
+      "JumpPortal",
+      "SetPet",
+      "SelectPetGear",
+      "SelectConfiguration",
+      "UseItem",
+      "Revive",
+      "SpinGalaxyGate",
+      "PlaceGalaxyGate",
+      "BuyGalaxyLife",
+      "AcceptGroupInvite",
+      "SetOverlay",
+      "RemoveOverlay",
+      "ClickGui",
+      "CloseGui",
+      "RefineOre",
+      "SellOre",
+      "SelectGateDifficulty"
+    ],
+    "feature_state_surface": [
+      "ClientFeatureState.observed_at_unix_ms + capabilities",
+      "gui element trees with bounds/text/enabled (Ruffle, Flash)",
+      "pet ownership/activity/health/shield/fuel/level/gears/idle (all backends where observable)",
+      "gate builder progression and observed difficulty offerings",
+      "event server time/active events/team when observable (Ruffle, Flash)",
+      "economy ore inventory/cargo/credits/uridium/trade availability"
+    ],
+    "event_stream": "poll_events(after_sequence) returns a bounded ClientEventBatch journal with ordered sequences and dropped-history reporting on all backends (packet journals the decoded stream; graphical backends journal game-log lines).",
+    "snapshot_contracts": [
+      "entities and extensible fields",
+      "map bounds/player position/safe places",
+      "navigation portals/star system/group",
+      "hero and item data when captured",
+      "optional native live frame"
+    ],
+    "generic_host_extension": "Behavior-engine ServiceRegistry and TaskSequence can add host integrations; currently registered services are not equivalent to upstream GUI/backpage/config/plugin APIs.",
+    "known_missing_typed_apis": [
+      "authenticated shop/autobuy/backpage purchase services with completion results",
+      "transaction acknowledgements beyond command submission",
+      "event schedules/calendar and authoritative per-gate mechanics",
+      "hangar switching and profile/config manager operations beyond SelectConfiguration",
+      "captcha challenge support",
+      "GUI operations on the packet backend (no display)",
+      "pet stuck timer and ship-specific ability readiness"
+    ]
+  },
+  "shared_gate_handlers": [
+    {
+      "handler": "AbgGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "DeltaGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "EpsilonGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "ZetaGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "HadesGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "KuiperGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "LowGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "EternalBlacklightGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "GopGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "TreacherousDomainGate",
+      "plugin_group": "event",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "InvasionGate",
+      "plugin_group": "event",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "MimesisMutinyGate",
+      "plugin_group": "event",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "DseGate",
+      "plugin_group": "event",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "FiestaGate",
+      "plugin_group": "event",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "TrinityTrialsGate",
+      "plugin_group": "event",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "VoyagersAscentGate",
+      "plugin_group": "event",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    },
+    {
+      "handler": "AnyGate",
+      "plugin_group": "gg",
+      "coverage": "partial_or_not_ported",
+      "details": "See API_GAPS.md Shared gate catalogue for existing equivalent and remaining implementation versus API needs"
+    }
+  ]
+}

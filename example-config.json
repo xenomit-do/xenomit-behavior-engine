@@ -1,0 +1,61 @@
+{
+  "mode": "kill_and_collect",
+  "working_map": null,
+  "pet_enabled": true,
+  "player": {
+    "category": "player"
+  },
+  "coordinates": {
+    "xx": 1.0,
+    "xy": 0.0,
+    "yx": 0.0,
+    "yy": 1.0,
+    "translate_x": 0.0,
+    "translate_y": 0.0
+  },
+  "collector": {
+    "max_distance": 5000.0,
+    "pickup_radius": 250.0,
+    "current_target_priority_bonus": 0,
+    "ignore_contested_boxes": false,
+    "stay_away_from_enemies": false,
+    "auto_cloak": false,
+    "boxes": [
+      {
+        "selector": {
+          "name_contains": "replace-with-box-name"
+        },
+        "collect": true,
+        "priority": 10,
+        "wait_ms": 500,
+        "resource": false
+      }
+    ]
+  },
+  "npc_killer": {
+    "max_target_distance": 5000.0,
+    "position_tolerance": 50.0,
+    "current_target_priority_bonus": 0,
+    "only_kill_preferred": false,
+    "max_circle_iterations": 5,
+    "run_config_in_circle": false,
+    "npcs": [
+      {
+        "selector": {
+          "category": "npc",
+          "name_contains": "replace-with-npc-name"
+        },
+        "kill": true,
+        "priority": 10,
+        "combat_radius": 560.0,
+        "flags": []
+      }
+    ]
+  },
+  "kill_and_collect": {
+    "collect_during_combat": true,
+    "collect_above_target_health": 0.25,
+    "collect_radius": 500.0,
+    "max_box_distance_from_npc": 800.0
+  }
+}
