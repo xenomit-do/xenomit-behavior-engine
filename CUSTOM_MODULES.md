@@ -28,7 +28,7 @@ overlapping paths fail registration. Groups and descriptions drive the UI.
 `BooleanMap { discover: Some(EntityCategory::Npc) }` adds observed NPC species
 as enabled entries without re-enabling entries the user disabled.
 
-In `xenomit-bot`, construct `PlannerRuntime::with_registry(modules.build(),
+In `xenomit-bot-gui`, construct `PlannerRuntime::with_registry(modules.build(),
 services.build())` where the default runtime is currently installed in
 `src/bot/mod.rs`. Modules are Rust registrations made before engine attachment,
 not hot-loaded plugins. No UI match arms or new settings widgets are needed.
