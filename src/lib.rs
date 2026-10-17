@@ -25,6 +25,7 @@ pub mod shared;
 pub use rules::{
     BehaviorRegistry, BehaviorRunner, GeneralBehavior, HostAction, RuleContext, RuleOutput,
     behavior_settings_descriptor, builtin_behavior_registry, filter_booty_boxes,
+    parse_rule_action, parse_rule_condition,
 };
 pub mod modules;
 pub mod operations;
