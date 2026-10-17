@@ -33,6 +33,17 @@ pub struct BehaviorConfig {
     /// Temporary map travel suspends this mode and resumes it on arrival.
     pub working_map: Option<i32>,
     pub pet_enabled: bool,
+    /// Formation hotkeys configured for each planner mode. These keys are
+    /// resolved through observed slot-bar state by the manager adapter.
+    pub formations: FormationConfig,
+    pub roaming: RoamingConfig,
+    pub avoidance: AvoidanceConfig,
+    pub auto_refine: bool,
+    /// Use an explicitly observed instant-repair item only while repairing,
+    /// and only when the observed item count is above this threshold.
+    pub instant_repair_above: u64,
+    /// Trigger drone repair below this observed health fraction.
+    pub drone_repair_percent: f64,
 }
 
 impl Default for BehaviorConfig {
@@ -46,7 +57,48 @@ impl Default for BehaviorConfig {
             kill_and_collect: KillAndCollectConfig::default(),
             working_map: None,
             pet_enabled: true,
+            formations: FormationConfig::default(),
+            roaming: RoamingConfig::default(),
+            avoidance: AvoidanceConfig::default(),
+            auto_refine: false,
+            instant_repair_above: 0,
+            drone_repair_percent: 0.9,
         }
+    }
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+#[serde(default)]
+pub struct FormationConfig {
+    pub attack: Option<String>,
+    pub roam: Option<String>,
+    pub run: Option<String>,
+    pub repair: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(default)]
+pub struct RoamingConfig {
+    pub keep: bool,
+    pub sequential: bool,
+    pub enemy_cbs_invisible: bool,
+}
+impl Default for RoamingConfig {
+    fn default() -> Self {
+        Self { keep: true, sequential: false, enemy_cbs_invisible: false }
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(default)]
+pub struct AvoidanceConfig {
+    pub mines: bool,
+    pub cbs: bool,
+    pub radiation: bool,
+}
+impl Default for AvoidanceConfig {
+    fn default() -> Self {
+        Self { mines: true, cbs: true, radiation: true }
     }
 }
 
@@ -99,6 +151,14 @@ impl BehaviorConfig {
             self.npc_killer.position_tolerance,
             "npc_killer.position_tolerance",
         )?;
+        validate_non_negative(self.npc_killer.ship_ability_min, "npc_killer.ship_ability_min")?;
+        if !self.drone_repair_percent.is_finite()
+            || !(0.0..=1.0).contains(&self.drone_repair_percent)
+        {
+            return Err(StepError::InvalidConfig(
+                "drone_repair_percent must be between 0 and 1".into(),
+            ));
+        }
         validate_non_negative(
             self.kill_and_collect.max_box_distance_from_npc,
             "kill_and_collect.max_box_distance_from_npc",
@@ -200,6 +260,8 @@ pub struct NpcRule {
     /// Restrict this rule to these map IDs. An empty list applies everywhere.
     pub map_ids: Vec<i32>,
     pub flags: Vec<NpcFlag>,
+    pub attack_key: Option<String>,
+    pub attack_formation: Option<String>,
 }
 
 impl Default for NpcRule {
@@ -211,11 +273,13 @@ impl Default for NpcRule {
             combat_radius: 560.0,
             map_ids: Vec::new(),
             flags: Vec::new(),
+            attack_key: None,
+            attack_formation: None,
         }
     }
 }
 
-/// Flags consulted by Darkbot's LootModule and LootCollectorModule.
+/// Flags consulted by rule's LootModule and LootCollectorModule.
 /// Attack/item flags are forwarded to built-in manager policy and adapters.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -231,6 +295,7 @@ pub enum NpcFlag {
     NoSab,
     UseRsb,
     PetLocator,
+    OppositeConfig,
 }
 
 /// Collection range and target ranking settings.
@@ -247,6 +312,7 @@ pub struct CollectorConfig {
     pub stay_away_from_enemies: bool,
     pub danger_distance: f64,
     pub auto_cloak: bool,
+    pub cloak_key: Option<String>,
 }
 
 impl Default for CollectorConfig {
@@ -260,6 +326,7 @@ impl Default for CollectorConfig {
             stay_away_from_enemies: false,
             danger_distance: 1500.0,
             auto_cloak: false,
+            cloak_key: None,
         }
     }
 }
@@ -276,6 +343,13 @@ pub struct NpcKillerConfig {
     pub only_kill_preferred: bool,
     pub max_circle_iterations: usize,
     pub run_config_in_circle: bool,
+    pub group_npcs: bool,
+    pub ammo_key: Option<String>,
+    pub sab_key: Option<String>,
+    pub rsb_enabled: bool,
+    pub rsb_key: Option<String>,
+    pub ship_ability_key: Option<String>,
+    pub ship_ability_min: f64,
 }
 
 impl Default for NpcKillerConfig {
@@ -288,6 +362,13 @@ impl Default for NpcKillerConfig {
             only_kill_preferred: false,
             max_circle_iterations: 5,
             run_config_in_circle: false,
+            group_npcs: true,
+            ammo_key: None,
+            sab_key: None,
+            rsb_enabled: false,
+            rsb_key: None,
+            ship_ability_key: None,
+            ship_ability_min: 150_000.0,
         }
     }
 }

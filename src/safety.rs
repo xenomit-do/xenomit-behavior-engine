@@ -1,7 +1,8 @@
 //! Cooperative repair/escape/revive policy using observed native manager state.
 use crate::{CoordinateTransform, ModuleContext, ObstacleNavigation, Point};
 use serde::{Deserialize, Serialize};
-use xenomit_game_api::{EntityCategory, GameCommand, GameSnapshot};
+use xenomit_game_api::{EntityCategory, GameCommand, GameSnapshot, ReviveLocation};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(default)]
@@ -17,6 +18,13 @@ pub struct SafetyConfig {
     pub max_deaths: u32,
     pub revive_wait_seconds: u64,
     pub auto_revive: bool,
+    pub revive_location: ReviveLocation,
+    pub revive_wait_after_seconds: u64,
+    pub remember_enemies_for_seconds: u64,
+    pub stop_running_no_sight: bool,
+    pub run_port_distance: f64,
+    pub enemies_tag: Option<String>,
+    pub player_tags: BTreeMap<i32, String>,
 }
 impl Default for SafetyConfig {
     fn default() -> Self {
@@ -32,6 +40,13 @@ impl Default for SafetyConfig {
             max_deaths: 10,
             revive_wait_seconds: 5,
             auto_revive: true,
+            revive_location: ReviveLocation::Base,
+            revive_wait_after_seconds: 0,
+            remember_enemies_for_seconds: 15,
+            stop_running_no_sight: true,
+            run_port_distance: 0.0,
+            enemies_tag: None,
+            player_tags: BTreeMap::new(),
         }
     }
 }
@@ -53,6 +68,10 @@ impl SafetyConfig {
         if !self.sight_distance.is_finite()
             || self.sight_distance < 0.0
             || self.revive_wait_seconds > 3600
+            || self.revive_wait_after_seconds > 86_400
+            || self.remember_enemies_for_seconds > 86_400
+            || !self.run_port_distance.is_finite()
+            || self.run_port_distance < 0.0
         {
             return Err("Invalid safety distance or revive delay".into());
         }
@@ -67,6 +86,7 @@ pub struct SafetyManager {
     deaths: u32,
     last_revive: Option<u64>,
     revive_attempts: u32,
+    revive_resume_at: Option<u64>,
 }
 pub struct SafetyOutcome {
     pub context: ModuleContext,
@@ -106,7 +126,7 @@ impl SafetyManager {
             }
             outcome.context.safe_to_work = false;
             outcome.context.safety_status = Some(format!(
-                "Destroyed ({}/{} deaths); waiting for free base repair",
+                "Destroyed ({}/{} deaths); waiting for an eligible repair offer",
                 self.deaths, config.max_deaths
             ));
             if config.max_deaths > 0 && self.deaths >= config.max_deaths {
@@ -126,15 +146,44 @@ impl SafetyManager {
                 && self
                     .last_revive
                     .is_none_or(|last| now_ms.saturating_sub(last) >= 10_000)
-                && let Some(repair_type) = snapshot.navigation.hero.free_repair_type
             {
-                outcome.commands.push(GameCommand::Revive { repair_type });
-                self.last_revive = Some(now_ms);
-                self.revive_attempts += 1;
+                let offered = snapshot.navigation.features.as_ref()
+                    .and_then(|features| features.revive_options.as_ref())
+                    .and_then(|options| {
+                        let eligible = |option: &&xenomit_game_api::ReviveOption| {
+                            option.visible && option.free && option.affordable
+                                && option.cooldown_ms.unwrap_or(0) == 0
+                        };
+                        options.iter().filter(eligible)
+                            .find(|option| option.location == config.revive_location)
+                            .or_else(|| options.iter().filter(eligible)
+                                .find(|option| option.location == ReviveLocation::Base))
+                            .map(|option| (option.repair_type, option.location))
+                    })
+                    .or_else(|| snapshot.navigation.hero.free_repair_type
+                        .map(|repair_type| (repair_type, ReviveLocation::Base)));
+                if let Some((repair_type, location)) = offered {
+                    outcome.commands.push(GameCommand::ReviveAt { repair_type, location });
+                    self.last_revive = Some(now_ms);
+                    self.revive_attempts += 1;
+                } else {
+                    outcome.context.safety_status = Some(
+                        "Destroyed; no visible, free, affordable, cooldown-free repair offer is observed".into()
+                    );
+                }
             }
             return outcome;
         }
-        self.dead_since = None;
+        if self.dead_since.take().is_some() && config.revive_wait_after_seconds > 0 {
+            self.revive_resume_at = Some(now_ms.saturating_add(config.revive_wait_after_seconds.saturating_mul(1000)));
+        }
+        if self.revive_resume_at.is_some_and(|until| now_ms < until) {
+            outcome.context.safe_to_work = false;
+            outcome.context.safety_waiting = true;
+            outcome.context.safety_status = Some("Waiting after revive".into());
+            return outcome;
+        }
+        self.revive_resume_at = None;
         if !config.enabled {
             self.repairing_since = None;
             self.enemy_until = 0;
@@ -148,16 +197,22 @@ impl SafetyManager {
         let shield = percentage(hero.shield, hero.max_shield);
         let enemy = snapshot.entities.iter().any(|e| {
             let observation = outcome.context.observation(e);
-            observation.enemy
+            let tag_matches = config.enemies_tag.as_ref().is_none_or(|wanted| {
+                e.id.as_ref().and_then(serde_json::Value::as_i64)
+                    .and_then(|id| i32::try_from(id).ok())
+                    .and_then(|id| config.player_tags.get(&id))
+                    .is_some_and(|tag| tag.eq_ignore_ascii_case(wanted))
+            });
+            observation.enemy && tag_matches
                 && ((config.run_from_enemy && observation.attacking_hero)
                     || (config.run_in_sight
                         && (e.position.x - hero.position.x).hypot(e.position.y - hero.position.y)
                             < config.sight_distance))
         });
         if enemy {
-            self.enemy_until = now_ms.saturating_add(15_000);
+            self.enemy_until = now_ms.saturating_add(config.remember_enemies_for_seconds.saturating_mul(1000));
         }
-        let escaping = now_ms < self.enemy_until;
+        let escaping = enemy || (!config.stop_running_no_sight && now_ms < self.enemy_until);
         let roaming = outcome.context.hero_attacking.is_none();
         if hp.is_some_and(|hp| {
             hp < config.min_health_percent || (roaming && hp < config.roaming_repair_health_percent)
@@ -228,6 +283,7 @@ impl SafetyManager {
                     (goal, cost)
                 })
             })
+            .filter(|(_, cost)| config.run_port_distance <= 0.0 || *cost <= config.run_port_distance)
             .min_by(|a, b| a.1.total_cmp(&b.1))
             .map(|(goal, _)| goal);
         if let Some(destination) = destination {
@@ -291,6 +347,8 @@ pub struct SafetyCheckpoint {
     pub last_revive_age_ms: Option<u64>,
     /// Revive attempts for the current death.
     pub revive_attempts: u32,
+    /// Remaining post-revive cooldown before ordinary work resumes.
+    pub revive_resume_remaining_ms: Option<u64>,
 }
 
 impl SafetyManager {
@@ -303,6 +361,7 @@ impl SafetyManager {
             deaths: self.deaths,
             last_revive_age_ms: crate::checkpoint::age_ms(self.last_revive, now_ms),
             revive_attempts: self.revive_attempts,
+            revive_resume_remaining_ms: crate::checkpoint::remaining_ms(self.revive_resume_at, now_ms),
         }
     }
 
@@ -319,6 +378,7 @@ impl SafetyManager {
         self.deaths = checkpoint.deaths;
         self.last_revive = crate::checkpoint::rebase_age(now_ms, checkpoint.last_revive_age_ms);
         self.revive_attempts = checkpoint.revive_attempts;
+        self.revive_resume_at = crate::checkpoint::rebase_deadline(now_ms, checkpoint.revive_resume_remaining_ms);
         Ok(())
     }
 }
