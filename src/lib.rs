@@ -25,7 +25,7 @@ pub mod shared;
 pub use rules::{
     BehaviorRegistry, BehaviorRunner, GeneralBehavior, HostAction, RuleContext, RuleOutput,
     behavior_settings_descriptor, builtin_behavior_registry, filter_booty_boxes,
-    parse_rule_action, parse_rule_condition,
+    condition_matches_snapshot, parse_rule_action, parse_rule_condition,
 };
 pub mod modules;
 pub mod operations;
@@ -47,8 +47,9 @@ pub use checkpoint::{
     settings_fingerprint,
 };
 pub use config::{
-    BehaviorConfig, BehaviorMode, BoxRule, CollectorConfig, CoordinateTransform, EntitySelector,
-    KillAndCollectConfig, NpcFlag, NpcKillerConfig, NpcRule,
+    AvoidanceConfig, BehaviorConfig, BehaviorMode, BoxRule, CollectorConfig, CoordinateTransform,
+    EntitySelector, FormationConfig, KillAndCollectConfig, NpcFlag, NpcKillerConfig, NpcRule,
+    RoamingConfig,
 };
 pub use context::{EntityObservation, ModuleContext, Navigation};
 pub use engine::{

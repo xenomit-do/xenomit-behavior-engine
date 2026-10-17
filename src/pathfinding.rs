@@ -1,9 +1,9 @@
 //! Bounded A* with continuous collision checks and line-of-sight smoothing.
 //! All obstacle geometry is in world coordinates; Navigation queries honor
 //! the planner's affine coordinate transform.
-use crate::{CoordinateTransform, Navigation, Point};
+use crate::{AvoidanceConfig, CoordinateTransform, Navigation, Point};
 use std::{cmp::Ordering, collections::BinaryHeap};
-use xenomit_game_api::{GameEntity, GameSnapshot, Obstacle, ObstacleShape};
+use xenomit_game_api::{GameEntity, GameSnapshot, Obstacle, ObstacleKind, ObstacleShape};
 
 pub const PATH_CLEARANCE: f64 = 60.0;
 pub struct ObstacleNavigation<'a> {
@@ -16,6 +16,14 @@ pub struct ObstacleNavigation<'a> {
 }
 impl<'a> ObstacleNavigation<'a> {
     pub fn from_snapshot(snapshot: &'a GameSnapshot, transform: CoordinateTransform) -> Self {
+        Self::from_snapshot_avoiding(snapshot, transform, &AvoidanceConfig::default())
+    }
+
+    pub fn from_snapshot_avoiding(
+        snapshot: &'a GameSnapshot,
+        transform: CoordinateTransform,
+        avoidance: &AvoidanceConfig,
+    ) -> Self {
         let map_id = snapshot.map.as_ref().and_then(|m| m.id);
         Self {
             width: snapshot
@@ -33,6 +41,12 @@ impl<'a> ObstacleNavigation<'a> {
                     .navigation
                     .obstacles
                     .iter()
+                    .filter(|obstacle| match obstacle.kind {
+                        ObstacleKind::NoAccess => true,
+                        ObstacleKind::Mine => avoidance.mines,
+                        ObstacleKind::Cbs => avoidance.cbs,
+                        ObstacleKind::Radiation => avoidance.radiation,
+                    })
                     .map(PreparedObstacle::new)
                     .collect()
             } else {
@@ -508,8 +522,34 @@ impl MovementRouter {
         goal: Point,
         now_ms: u64,
     ) -> Result<Option<Point>, String> {
-        let navigation =
-            ObstacleNavigation::from_snapshot(snapshot, CoordinateTransform::default());
+        self.next_avoiding(snapshot, from, goal, now_ms, &AvoidanceConfig::default())
+    }
+
+    pub fn next_avoiding(
+        &mut self,
+        snapshot: &GameSnapshot,
+        from: Point,
+        goal: Point,
+        now_ms: u64,
+        avoidance: &AvoidanceConfig,
+    ) -> Result<Option<Point>, String> {
+        let navigation = ObstacleNavigation::from_snapshot_avoiding(
+            snapshot,
+            CoordinateTransform::default(),
+            avoidance,
+        );
+        let active_obstacles: Vec<_> = snapshot
+            .navigation
+            .obstacles
+            .iter()
+            .filter(|obstacle| match obstacle.kind {
+                ObstacleKind::NoAccess => true,
+                ObstacleKind::Mine => avoidance.mines,
+                ObstacleKind::Cbs => avoidance.cbs,
+                ObstacleKind::Radiation => avoidance.radiation,
+            })
+            .cloned()
+            .collect();
         let map = snapshot.map.as_ref().and_then(|m| m.id);
         let stalled = self.progress.is_some_and(|(position, at)| {
             distance(from, position) < 30.0 && now_ms.saturating_sub(at) > 5_000
@@ -524,7 +564,7 @@ impl MovementRouter {
             || self
                 .goal
                 .is_none_or(|previous| distance(previous, goal) > 50.0)
-            || self.obstacles != snapshot.navigation.obstacles
+            || self.obstacles != active_obstacles
             || stalled
             || (self.waypoints.is_empty()
                 && self.endpoint.is_some_and(|end| distance(from, end) > 35.0))
@@ -538,7 +578,7 @@ impl MovementRouter {
             self.endpoint = self.waypoints.back().copied();
             self.map = map;
             self.goal = Some(goal);
-            self.obstacles = snapshot.navigation.obstacles.clone();
+            self.obstacles = active_obstacles;
             self.progress = Some((from, now_ms));
         }
         while self

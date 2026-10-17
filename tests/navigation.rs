@@ -18,6 +18,7 @@ fn obstacle(shape: ObstacleShape) -> Obstacle {
         id: 1,
         name: "NOA".into(),
         shape,
+        kind: xenomit_game_api::ObstacleKind::NoAccess,
         inverted: false,
     }
 }
@@ -417,7 +418,10 @@ fn death_recovery_waits_for_offered_free_repair_and_counts_each_death_once() {
         safety
             .tick(&snapshot, 6000, &config, CoordinateTransform::default())
             .commands,
-        vec![GameCommand::Revive { repair_type: 1 }]
+        vec![GameCommand::ReviveAt {
+            repair_type: 1,
+            location: xenomit_game_api::ReviveLocation::Base,
+        }]
     );
     assert!(
         safety
@@ -533,7 +537,10 @@ fn builtin_death_commands_are_emitted_even_without_player_entity() {
     assert!(plan.player.is_none());
     assert_eq!(
         plan.controls.commands,
-        vec![GameCommand::Revive { repair_type: 1 }]
+        vec![GameCommand::ReviveAt {
+            repair_type: 1,
+            location: xenomit_game_api::ReviveLocation::Base,
+        }]
     );
 }
 
@@ -732,7 +739,10 @@ fn enemy_retreat_memory_expires_and_does_not_treat_friendly_entities_as_threats(
         .fields
         .insert("attackingHero".into(), json!(true));
     let mut safety = SafetyManager::default();
-    let config = SafetyConfig::default();
+    let config = SafetyConfig {
+        stop_running_no_sight: false,
+        ..SafetyConfig::default()
+    };
     assert!(
         !safety
             .tick(&frame, 0, &config, CoordinateTransform::default())
